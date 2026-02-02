@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Valentine 🐨❤️</title>
+    <style>
+        :root {
+            --color-lavender: #E6E6FA;
+            --color-dark-lavender: #9370DB;
+            --color-pink: #FF69B4;
+            --color-red: #DC143C;
+            --color-white: #FFFFFF;
+            --color-text: #4B0082;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-lavender);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--color-white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--color-red);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05); }
+            50% { transform: scale(1); }
+        }
+
+        .koala-header { font-size: 3rem; margin-bottom: 10px; }
+
+        .question-text {
+            color: var(--color-text);
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, var(--color-red), var(--color-pink));
+            color: var(--color-white);
+        }
+
+        .btn-yes:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+        }
+
+        .btn-no {
+            background: var(--color-dark-lavender);
+            color: var(--color-white);
+        }
+
+        .btn-no:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
+        }
+
+        .option-btn {
+            background: var(--color-lavender);
+            color: var(--color-text);
+            margin: 10px;
+            padding: 12px 30px;
+            min-width: 200px;
+        }
+
+        .option-btn:hover {
+            background: var(--color-dark-lavender);
+            color: var(--color-white);
+            transform: translateY(-2px);
+        }
+
+        .option-btn.correct {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: var(--color-white);
+            animation: correctAnswer 0.5s ease;
+        }
+
+        .option-btn.incorrect {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+            color: var(--color-white);
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctAnswer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show { display: flex; }
+
+        .modal-content {
+            background: var(--color-white);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content h2 {
+            color: var(--color-red);
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .modal-content p {
+            color: var(--color-text);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .final-message { display: none; text-align: center; }
+        .final-message.show { display: block; animation: fadeIn 1s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .final-message h2 {
+            color: var(--color-red);
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+        }
+
+        .final-message p {
+            color: var(--color-text);
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+
+        .final-hearts {
+            font-size: 2.2rem;
+            margin: 10px 0 6px;
+            animation: heartFloat 2.2s ease-in-out infinite;
+        }
+
+        @keyframes heartFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .hidden { display: none; }
+
+        .quiz-progress {
+            margin-bottom: 20px;
+            color: var(--color-dark-lavender);
+            font-weight: 600;
+        }
+
+        /* BIG romantic popup for correct answers */
+        .answer-popup-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+        }
+
+        .answer-popup-backdrop.show { display: flex; }
+
+        .answer-popup-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 24px 24px 20px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+            animation: popIn 0.25s ease-out;
+        }
+
+        .answer-popup-card h3 {
+            font-size: 1.5rem;
+            color: var(--color-red);
+            margin-bottom: 10px;
+        }
+
+        .answer-popup-card p {
+            font-size: 1.05rem;
+            color: var(--color-text);
+            margin-bottom: 18px;
+        }
+
+        .answer-popup-card .emoji { font-size: 2rem; margin-bottom: 6px; }
+
+        .answer-popup-close {
+            padding: 10px 26px;
+            font-size: 1rem;
+        }
+
+        /* Wrong‑answer GIF popup (per question, optional line) */
+        .wrong-popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            justify-content: center;
+            align-items: center;
+            z-index: 1300;
+        }
+
+        .wrong-popup.show { display: flex; }
+
+        .wrong-popup-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            animation: popIn 0.25s ease-out;
+        }
+
+        .wrong-popup-card p {
+            font-size: 1rem;
+            color: var(--color-text);
+            margin-bottom: 10px;
+        }
+
+        .wrong-popup-card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .wrong-popup-close {
+            padding: 8px 20px;
+            font-size: 0.95rem;
+        }
+
+        /* Starry background */
+        .starry-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .star-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #ffe6ff 45%, transparent 70%);
+            opacity: 0.8;
+            animation: twinkle 1.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { transform: scale(0.7); opacity: 0.4; }
+            100% { transform: scale(1); opacity: 0.95; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 2rem; }
+            .question-text { font-size: 1.2rem; }
+            button { padding: 12px 30px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="starry-overlay" id="starOverlay"></div>
+
+        <div id="initialQuestion">
+            <div class="koala-header">🐨❤️</div>
+            <h1>Hey Cutiee</h1>
+            <p class="question-text">Rishitha, do you wanna be my Valentine?</p>
+            <div class="btn-group">
+                <button class="btn-yes" onclick="handleYes()">Yes! 💕</button>
+                <button class="btn-no" onclick="handleNo()">No</button>
+            </div>
+        </div>
+
+        <div id="quizSection" class="hidden">
+            <h1>💝 Our Love Story 💝</h1>
+            <div class="quiz-progress">
+                Question <span id="currentQuestion">1</span> of 4
+            </div>
+            <p class="question-text" id="quizQuestion"></p>
+            <div class="btn-group" id="quizOptions"></div>
+        </div>
+
+        <div id="finalMessage" class="final-message">
+            <div class="koala-header">🐨❤️</div>
+            <h2>Congratulations, my Valentine. ✨</h2>
+            <div class="final-hearts">💖💕</div>
+            <p>Every answer brought you closer to this moment, but my heart chose you long before this quiz.</p>
+            <p style="font-size: 1.4rem; font-weight: bold; color: var(--color-red);">
+                Now, cutie, you are officially my Valentine, and my favorite forever human. 💘
+            </p>
+            <div class="final-hearts">💗</div>
+        </div>
+    </div>
+
+    <div id="noModal" class="modal">
+        <div class="modal-content">
+            <h2>🥺</h2>
+            <p>Gundu paguluthadhi… the only real option is <strong>YES</strong>! 💕</p>
+            <button class="btn-yes" onclick="closeModal()">Okay, YES! 💖</button>
+        </div>
+    </div>
+
+    <!-- BIG romantic popup for correct answers -->
+    <div id="answerPopup" class="answer-popup-backdrop">
+        <div class="answer-popup-card">
+            <div class="emoji" id="answerPopupEmoji">💘</div>
+            <h3 id="answerPopupTitle">Correct, my love!</h3>
+            <p id="answerPopupText"></p>
+            <button class="btn-yes answer-popup-close" onclick="closeAnswerPopup()">Next ➜</button>
+        </div>
+    </div>
+
+    <!-- Wrong answer GIF popup (per question) -->
+    <div id="wrongPopup" class="wrong-popup">
+        <div class="wrong-popup-card">
+            <p id="wrongPopupLine"></p>
+            <img id="wrongPopupGif" src="" alt="Funny GIF">
+            <button class="btn-yes wrong-popup-close" onclick="closeWrongPopup()">Okay 😅</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "When did we first meet?",
+                options: ["June 29", "June 21", "June 22", "June 25"],
+                correct: 1
+            },
+            {
+                question: "Tell me where we want to travel next?",
+                options: ["Paris", "Japan", "Las Vegas", "Hawaii"],
+                correct: 0
+            },
+            {
+                question: "What's my favorite food?",
+                options: ["Chicken Biryani", "Ridge Gourd", "Pani Puri", "Paneer"],
+                correct: 1
+            },
+            {
+                question: "What makes me smile the most?",
+                options: ["Gifts", "Your smile", "Jokes", "Surprises"],
+                correct: 1
+            }
+        ];
+
+        const flirtyLines = [
+            "From the first day we met, my heart quietly decided it only wants you.",
+            "I’d rather get lost with you in Paris than be found anywhere else without you.",
+            "You’re the only flavor my heart never gets tired of, no matter how many times I taste this feeling.",
+            "Your smile doesn’t just make me happy, it feels like home every single time."
+        ];
+
+        // Wrong‑answer config per question (gif + optional line)
+        const wrongConfigs = [
+            {
+                gif: "https://media1.tenor.com/images/c1629c7f447f5cf2235c035fa839d17d/tenor.gif?itemid=14779224",
+                line: "" // Q1: no line
+            },
+            {
+                gif: "https://media.tenor.com/QuiI4S552tUAAAAC/anjaneyulu-brahmanandam.gif",
+                line: "Memu ekkadiko tesukapodham anukuntam kani meru raru 😅" // Q2
+            },
+            {
+                gif: "https://c.tenor.com/dcK78cIRRSoAAAAC/telugu-brahmi.gif",
+                line: "" // Q3: no line
+            },
+            {
+                gif: "https://media1.tenor.com/m/stwgJVcmA6QAAAAd/funny-memes-telugu-telugu-dialogues.gif",
+                line: "Bhagane unnam ga, manaki enduku ivanni? 😅" // Q4
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let awaitingNextQuestion = false;
+
+        const starOverlay = document.getElementById('starOverlay');
+        const answerPopup = document.getElementById('answerPopup');
+        const answerPopupText = document.getElementById('answerPopupText');
+        const wrongPopup = document.getElementById('wrongPopup');
+        const wrongPopupGif = document.getElementById('wrongPopupGif');
+        const wrongPopupLine = document.getElementById('wrongPopupLine');
+
+        function handleNo() {
+            document.getElementById('noModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('noModal').classList.remove('show');
+        }
+
+        function handleYes() {
+            document.getElementById('initialQuestion').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuizIndex >= quizData.length) {
+                showFinalMessage();
+                return;
+            }
+
+            awaitingNextQuestion = false;
+
+            const question = quizData[currentQuizIndex];
+            document.getElementById('currentQuestion').textContent = currentQuizIndex + 1;
+            document.getElementById('quizQuestion').textContent = question.question;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function openAnswerPopup(message) {
+            answerPopupText.textContent = message;
+            answerPopup.classList.add('show');
+            awaitingNextQuestion = true;
+        }
+
+        function closeAnswerPopup() {
+            answerPopup.classList.remove('show');
+            if (awaitingNextQuestion) {
+                currentQuizIndex++;
+                loadQuestion();
+            }
+        }
+
+        function openWrongPopup(config) {
+            wrongPopupGif.src = config.gif;
+            if (config.line && config.line.trim() !== "") {
+                wrongPopupLine.textContent = config.line;
+                wrongPopupLine.style.display = "block";
+            } else {
+                wrongPopupLine.textContent = "";
+                wrongPopupLine.style.display = "none";
+            }
+            wrongPopup.classList.add('show');
+        }
+
+        function closeWrongPopup() {
+            wrongPopup.classList.remove('show');
+        }
+
+        function checkAnswer(selectedIndex, button) {
+            const question = quizData[currentQuizIndex];
+            const allButtons = document.querySelectorAll('.option-btn');
+
+            if (selectedIndex === question.correct) {
+                button.classList.add('correct');
+                allButtons.forEach(btn => btn.disabled = true);
+
+                const line = flirtyLines[currentQuizIndex] || flirtyLines[flirtyLines.length - 1];
+                openAnswerPopup(line);
+            } else {
+                button.classList.add('incorrect');
+
+                const config = wrongConfigs[currentQuizIndex];
+                if (config && config.gif) {
+                    openWrongPopup(config);
+                }
+
+                setTimeout(() => {
+                    button.classList.remove('incorrect');
+                }, 500);
+            }
+        }
+
+        function showFinalMessage() {
+            document.getElementById('quizSection').classList.add('hidden');
+            document.getElementById('finalMessage').classList.add('show');
+            createStarryOverlay();
+        }
+
+        function createStarryOverlay() {
+            starOverlay.innerHTML = '';
+
+            const spots = [
+                { top: '10%', left: '15%' },
+                { top: '18%', left: '70%' },
+                { top: '35%', left: '5%' },
+                { top: '50%', left: '80%' },
+                { top: '70%', left: '20%' },
+                { top: '82%', left: '60%' }
+            ];
+
+            spots.forEach((pos, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'star-dot';
+                Object.assign(dot.style, pos);
+                dot.style.animationDelay = (i * 0.4) + 's';
+                starOverlay.appendChild(dot);
+            });
+        }
+    </script>
+</body>
+</html>
